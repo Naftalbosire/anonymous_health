@@ -1,22 +1,24 @@
 // sockets/chatSocket.js
-const { Message, GroupMessage } = require('../models'); // Load models
+const { Message } = require('../models/Message');  // CommonJS import
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log('User connected:', socket.id);
 
-    // Private Chat
+    // Listen for private messages
     socket.on('private_message', async ({ sender, recipient, content }) => {
-      const message = await Message.create({ sender, recipient, content });
-      io.to(recipient).emit('private_message', message);
+      try {
+        const message = await Message.create({ sender, recipient, content });
+
+        // Emit the message to the recipient
+        io.to(recipient).emit('private_message', message);
+        socket.emit('private_message', message); // Optionally emit to sender
+      } catch (error) {
+        console.error('Error sending private message:', error);
+      }
     });
 
-    // Group Chat
-    socket.on('group_message', async ({ groupId, sender, content }) => {
-      const groupMessage = await GroupMessage.create({ group: groupId, sender, content });
-      io.to(groupId).emit('group_message', groupMessage);
-    });
-
+    // Listen for disconnect
     socket.on('disconnect', () => {
       console.log('User disconnected:', socket.id);
     });

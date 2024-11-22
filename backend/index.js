@@ -1,9 +1,12 @@
+// index.js
 const express = require("express");
 const mongoose = require("mongoose");
 const dotenv = require("dotenv");
+const socketIO = require("socket.io");
+
 dotenv.config();
 
-const authRoutes = require("./routes/authRoutes");
+const authRoutes = require("./routes/authRoutes");  // CommonJS import
 const chatRoutes = require("./routes/chatRoutes");
 const groupRoutes = require("./routes/groupRoutes");
 
@@ -42,7 +45,12 @@ app.get("/", (req, res) => {
 });
 
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+const server = app.listen(process.env.PORT || 3000, () => {
+  console.log(`Server running on http://localhost:${process.env.PORT || 3000}`);
 });
+
+// Set up socket.io
+const io = socketIO(server); // Attach socket.io to the server
+
+// WebSocket connection handling
+require('./sockets/chatSocket')(io); // Use CommonJS to load chatSocket

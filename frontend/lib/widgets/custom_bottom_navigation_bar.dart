@@ -37,7 +37,22 @@ class CustomBottomNavigationBar extends StatelessWidget {
       backgroundColor: Colors.black,
       showUnselectedLabels: true,
       type: BottomNavigationBarType.fixed, // Prevents icons from shifting
-      onTap: onTap,
+      onTap: (index) {
+        switch (index) {
+          case 0:
+            Navigator.pushNamed(context, '/home'); // Home route
+            break;
+          case 1:
+            Navigator.pushNamed(context, '/chats'); // Chat route
+            break;
+          case 2:
+            Navigator.pushNamed(context, '/communities'); // Communities route
+            break;
+          case 3:
+            Navigator.pushNamed(context, '/directory'); // Directory route
+            break;
+        }
+      },
     );
   }
 }

@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/auth/registration_screen.dart';
 import 'package:frontend/screens/auth/splash_screen.dart';
+import 'package:frontend/screens/chats_screen.dart';
+import 'package:frontend/screens/communities_screen.dart';
 import 'package:frontend/screens/directory_screen.dart';
 import 'package:frontend/screens/home/home_screen.dart'; // Import the DirectoryScreen
+import 'package:frontend/screens/profile_screen.dart';
+//import 'package:frontend/screens/settings_screen.dart';
 import 'package:provider/provider.dart';
 import 'widgets/theme_notifier.dart';
 
@@ -63,13 +67,13 @@ class MyApp extends StatelessWidget {
               '/home': (context) => const HomeScreen(),
               '/directory': (context) =>
                   const DirectoryScreen(), // Add the DirectoryScreen route
-              // '/chat': (context) => const ChatsScreen(),
-              // '/communities': (context) => CommunitiesScreen(),
-              // '/profile': (context) => const ProfileScreen(),
-              // '/settings': (context) => const SettingsScreen(),
+              '/chat': (context) => const ChatsScreen(),
+              '/communities': (context) => CommunitiesScreen(),
+              '/profile': (context) => const ProfileScreen(),
+              //'/settings': (context) => const SettingsScreen(),
               // '/help': (context) => const HelpScreen(),
               // '/about': (context) => const AboutScreen(),
-              // '/notifications': (context) => const NotificationsScreen(),
+              //'/notifications': (context) => const NotificationsScreen(),
               // '/privacy_security': (context) => const PrivacySecurityScreen(),
               // '/theme': (context) => const ThemeScreen(),
             },
