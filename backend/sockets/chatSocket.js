@@ -1,26 +1,36 @@
 // sockets/chatSocket.js
-const { Message } = require('../models/Message');  // CommonJS import
+const { Message } = require("../models/Message"); // CommonJS import
 
 module.exports = (io) => {
-  io.on('connection', (socket) => {
-    console.log('User connected:', socket.id);
+  const userSocketMap = new Map();
 
-    // Listen for private messages
-    socket.on('private_message', async ({ sender, recipient, content }) => {
+  io.on("connection", (socket) => {
+    // Map user ID to socket ID
+    socket.on("register_user", (userId) => {
+      userSocketMap.set(userId, socket.id);
+    });
+
+    socket.on("private_message", async ({ sender, recipient, content }) => {
       try {
         const message = await Message.create({ sender, recipient, content });
 
-        // Emit the message to the recipient
-        io.to(recipient).emit('private_message', message);
-        socket.emit('private_message', message); // Optionally emit to sender
+        const recipientSocketId = userSocketMap.get(recipient);
+        if (recipientSocketId) {
+          io.to(recipientSocketId).emit("private_message", message);
+        }
+        socket.emit("private_message", message); // Optionally emit to sender
       } catch (error) {
-        console.error('Error sending private message:', error);
+        console.error("Error sending private message:", error);
+        socket.emit("error", "Failed to send message");
       }
     });
 
-    // Listen for disconnect
-    socket.on('disconnect', () => {
-      console.log('User disconnected:', socket.id);
+    socket.on("disconnect", () => {
+      console.log("User disconnected:", socket.id);
+      // Remove user from map
+      userSocketMap.forEach((id, userId) => {
+        if (id === socket.id) userSocketMap.delete(userId);
+      });
     });
   });
 };
