@@ -6,7 +6,7 @@ module.exports = (io) => {
 
   io.on("connection", (socket) => {
     // Map user ID to socket ID
-    console.log(connected)
+    console.log('connected')
     socket.on("register_user", (userId) => {
       userSocketMap.set(userId, socket.id);
     });
