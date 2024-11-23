@@ -17,7 +17,10 @@ module.exports = (io) => {
         const recipientSocketId = userSocketMap.get(recipient);
         if (recipientSocketId) {
           io.to(recipientSocketId).emit("private_message", message);
+        } else {
+          console.log("Recipient is offline. Message saved to database.");
         }
+
         socket.emit("private_message", message); // Optionally emit to sender
       } catch (error) {
         console.error("Error sending private message:", error);
