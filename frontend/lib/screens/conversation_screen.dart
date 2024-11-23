@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/services/chat_service.dart';
+import 'package:frontend/widgets/theme_notifier.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:provider/provider.dart';
 //import 'chat_service.dart'; // Import your ChatService
 
 class ConversationScreen extends StatefulWidget {
@@ -39,10 +42,13 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   void _sendMessage() async {
+    final token = Provider.of<TokenNotifier>(context, listen: false).token;
+    Map<String, dynamic> user = JwtDecoder.decode(token!);
+    print(user);
     if (_controller.text.isNotEmpty) {
       final content = _controller.text;
       try {
-        await _chatService.sendMessage(widget.userId, 'User1', content);
+        await _chatService.sendMessage(user["id"], widget.userId, content);
         setState(() {
           messages.add({
             'text': content,
