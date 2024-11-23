@@ -38,17 +38,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
     _chatService.disconnect();
   }
 
-  void _sendMessage() {
+  void _sendMessage() async {
     if (_controller.text.isNotEmpty) {
-      _chatService.sendMessage(widget.userId, 'User1', _controller.text);
-      setState(() {
-        messages.add({
-          'text': _controller.text,
-          'sender': widget.userId,
-          'time': _getCurrentTime(),
+      final content = _controller.text;
+      try {
+        await _chatService.sendMessage(widget.userId, 'User1', content);
+        setState(() {
+          messages.add({
+            'text': content,
+            'sender': widget.userId,
+            'time': _getCurrentTime(),
+          });
+          _controller.clear();
         });
-        _controller.clear();
-      });
+      } catch (e) {
+        // Handle error (e.g., show a snackbar)
+        print('Error: $e');
+      }
     }
   }
 
@@ -66,7 +72,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
 
   String _getCurrentTime() {
     final now = DateTime.now();
-    return '${now.hour}:${now.minute}';
+    return '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
   }
 
   @override
@@ -99,8 +105,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
-                    margin: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-                    padding: EdgeInsets.all(10),
+                    margin:
+                        const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+                    padding: const EdgeInsets.all(10),
                     decoration: BoxDecoration(
                       color: isMe ? Colors.lightGreenAccent : Colors.grey[300],
                       borderRadius: BorderRadius.circular(10),
@@ -110,8 +117,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ? CrossAxisAlignment.end
                           : CrossAxisAlignment.start,
                       children: [
-                        Text(message['text'], style: TextStyle(fontSize: 16)),
-                        SizedBox(height: 5),
+                        Text(message['text'],
+                            style: const TextStyle(fontSize: 16)),
+                        const SizedBox(height: 5),
                         Text(
                           message['time'],
                           style: TextStyle(fontSize: 12, color: Colors.black54),

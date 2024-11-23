@@ -6,11 +6,13 @@ module.exports = (io) => {
 
   io.on("connection", (socket) => {
     // Map user ID to socket ID
+    console.log(connected)
     socket.on("register_user", (userId) => {
       userSocketMap.set(userId, socket.id);
     });
 
     socket.on("private_message", async ({ sender, recipient, content }) => {
+      console.log('private message')
       try {
         const message = await Message.create({ sender, recipient, content });
         console.log(message.content);
