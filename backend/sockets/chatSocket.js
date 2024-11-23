@@ -1,5 +1,5 @@
 // sockets/chatSocket.js
-const { Message } = require("../models/Message"); // CommonJS import
+const Message = require("../models/Message"); // CommonJS import
 
 module.exports = (io) => {
   const userSocketMap = new Map();
@@ -17,7 +17,7 @@ module.exports = (io) => {
         const recipientSocketId = userSocketMap.get(recipient);
         if (recipientSocketId) {
           io.to(recipientSocketId).emit("private_message", message);
-          console.log('sent');
+          console.log("sent");
         } else {
           console.log("Recipient is offline. Message saved to database.");
         }
