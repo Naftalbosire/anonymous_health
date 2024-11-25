@@ -141,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Build the gradient background
+  // gradient background
   Widget _buildGradientBackground() {
     return Container(
       decoration: const BoxDecoration(
