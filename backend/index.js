@@ -22,7 +22,7 @@ mongoose
 // Route setup
 app.use("/api/auth", authRoutes);
 app.use("/api/chat", chatRoutes);
-app.use("/api/group", groupRoutes);
+app.use("/api/groups", groupRoutes);
 
 // HTML Route for the home page
 app.get("/", (req, res) => {
