@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/conversation_screen.dart';
 import 'package:frontend/widgets/constants.dart';
-import 'package:http/http.dart' as http; // For making API requests
+import 'package:frontend/widgets/theme_notifier.dart';
+import 'package:http/http.dart' as http;
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:provider/provider.dart'; // For making API requests
 
 class ChatsScreen extends StatefulWidget {
   const ChatsScreen({super.key});
@@ -24,6 +27,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
   // Function to fetch users from the API
   Future<void> fetchUsers() async {
     try {
+      final token = Provider.of<TokenNotifier>(context, listen: false).token;
+      Map<String, dynamic> currentUser = JwtDecoder.decode(token!);
+
       final response =
           await http.get(Uri.parse('${ApiConstants.baseUrl}/api/auth/users'));
 
@@ -31,8 +37,9 @@ class _ChatsScreenState extends State<ChatsScreen> {
         final allUsers =
             jsonDecode(response.body)['users']; // Parse the JSON response
         // Filter users to only include doctors
-        final filteredUsers =
-            allUsers.where((user) => user['role'] == 'doctor').toList();
+        final filteredUsers = currentUser['role'] == 'user'
+            ? allUsers.where((user) => user['role'] == 'doctor').toList()
+            : allUsers.where((user) => user['role'] == 'user').toList();
 
         setState(() {
           users = filteredUsers; // Update users with the filtered list
