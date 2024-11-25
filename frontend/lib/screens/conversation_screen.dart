@@ -8,11 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class ConversationScreen extends StatefulWidget {
-  final String userId;
+  final Map reciever;
 
   const ConversationScreen({
     super.key,
-    required this.userId,
+    required this.reciever,
   });
 
   @override
@@ -37,12 +37,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
     final token = Provider.of<TokenNotifier>(context, listen: false).token;
     Map<String, dynamic> user = JwtDecoder.decode(token!);
     final senderId = user["id"];
-    print(
-        '${ApiConstants.baseUrl}/api/chat/messages/${widget.userId}/$senderId');
+    final recieverId = widget.reciever['_id'];
+    print('${ApiConstants.baseUrl}/api/chat/messages/${recieverId}/$senderId');
     try {
       final response = await http.get(
         Uri.parse(
-          '${ApiConstants.baseUrl}/api/chat/messages/${widget.userId}/$senderId',
+          '${ApiConstants.baseUrl}/api/chat/messages/${recieverId}/$senderId',
         ),
         headers: {'Authorization': 'Bearer $token'},
       );
@@ -74,7 +74,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
     if (_controller.text.isNotEmpty) {
       final content = _controller.text;
       try {
-        await _chatService.sendMessage(senderId, widget.userId, content);
+        await _chatService.sendMessage(
+            senderId, widget.reciever['_id'], content);
         setState(() {
           messages.add({
             'text': content,
@@ -119,6 +120,14 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return '${now.hour.toString().padLeft(2, '0')}:${now.minute.toString().padLeft(2, '0')}';
   }
 
+  String extractUsername(String email) {
+    int atIndex = email.indexOf('@');
+    if (atIndex != -1) {
+      return email.substring(0, atIndex);
+    }
+    return ''; // Return empty string if no '@' found
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,7 +135,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.userId),
+            Text(extractUsername(widget.reciever['email'])),
           ],
         ),
         backgroundColor: Colors.lightBlue,
