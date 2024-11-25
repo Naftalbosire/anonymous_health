@@ -1,3 +1,4 @@
+import 'package:frontend/widgets/constants.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class ChatService {
@@ -5,7 +6,7 @@ class ChatService {
 
   // Initialize Socket.io
   void connectToServer() {
-    socket = IO.io('https://anonymous-health.onrender.com', <String, dynamic>{
+    socket = IO.io(ApiConstants.baseUrl, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });

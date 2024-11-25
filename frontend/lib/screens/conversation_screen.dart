@@ -37,7 +37,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
     final token = Provider.of<TokenNotifier>(context, listen: false).token;
     Map<String, dynamic> user = JwtDecoder.decode(token!);
     final senderId = user["id"];
-    print('${ApiConstants.baseUrl}/api/chat/messages/${widget.userId}/$senderId');
+    print(
+        '${ApiConstants.baseUrl}/api/chat/messages/${widget.userId}/$senderId');
     try {
       final response = await http.get(
         Uri.parse(
@@ -96,14 +97,20 @@ class _ConversationScreenState extends State<ConversationScreen> {
   }
 
   void _listenForMessages() {
+    final token = Provider.of<TokenNotifier>(context, listen: false).token;
+    Map<String, dynamic> user = JwtDecoder.decode(token!);
+    final senderId = user["id"];
     _chatService.socket.on('private_message', (data) {
-      setState(() {
-        messages.add({
-          'text': data['content'],
-          'sender': data['sender'],
-          'time': _getCurrentTime(),
+      print("Message received: $data");
+      if (data['sender'] != senderId) {
+        setState(() {
+          messages.add({
+            'text': data['content'],
+            'sender': data['sender'],
+            'time': _getCurrentTime(),
+          });
         });
-      });
+      }
     });
   }
 
