@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/services/chat_service.dart';
+import 'package:frontend/widgets/constants.dart';
 import 'package:frontend/widgets/theme_notifier.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:provider/provider.dart';
@@ -36,11 +37,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
     final token = Provider.of<TokenNotifier>(context, listen: false).token;
     Map<String, dynamic> user = JwtDecoder.decode(token!);
     final senderId = user["id"];
-
+    print('${ApiConstants.baseUrl}/api/chat/messages/${widget.userId}/$senderId');
     try {
       final response = await http.get(
         Uri.parse(
-          'https://anonymous-health.onrender.com/${widget.userId}/$senderId',
+          '${ApiConstants.baseUrl}/api/chat/messages/${widget.userId}/$senderId',
         ),
         headers: {'Authorization': 'Bearer $token'},
       );
@@ -123,10 +124,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ),
         backgroundColor: Colors.lightBlue,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.phone, color: Colors.white),
-            onPressed: () {},
-          ),
+          // IconButton(
+          //   icon: const Icon(Icons.phone, color: Colors.white),
+          //   onPressed: () {},
+          // ),
         ],
       ),
       body: Column(
