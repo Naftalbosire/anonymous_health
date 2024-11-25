@@ -121,7 +121,7 @@ class _ChatsScreenState extends State<ChatsScreen> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => ConversationScreen(
-                                      userId: user['_id'],
+                                      reciever: user
                                     ),
                                   ),
                                 );

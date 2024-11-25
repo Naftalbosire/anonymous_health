@@ -215,7 +215,7 @@ class _HomeScreenState extends State<HomeScreen> {
       final jwt = JWT.decode(token!);
       user = jwt.payload ?? 'null';
 
-      print(user.toString());
+      // print(user.toString());
     } catch (e) {
       print('Error decoding token: $e');
     }
