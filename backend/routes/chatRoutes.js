@@ -18,6 +18,7 @@ router.get('/messages/:userId', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch messages' });
   }
 });
+
 router.get('/messages/:userId/:currentUserId', async (req, res) => {
     const { userId, currentUserId } = req.params;
     try {
