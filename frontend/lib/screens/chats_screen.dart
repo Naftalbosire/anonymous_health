@@ -87,23 +87,11 @@ class _ChatsScreenState extends State<ChatsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Telephone Directory'),
+        title: const Text('Chats'),
         backgroundColor: Colors.lightBlueAccent,
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                hintText: 'Search contacts...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ),
           Expanded(
             child: isLoading
                 ? const Center(

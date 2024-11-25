@@ -19,7 +19,6 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
     'Addiction Recovery Group',
     'Parenting and Child Health',
     'Reproductive Health',
-    'LGBTQ+ Health and Support',
   ];
 
   void _onItemTapped(int index) {

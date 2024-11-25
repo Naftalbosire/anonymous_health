@@ -1,9 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:frontend/services/chat_service.dart';
 import 'package:frontend/widgets/theme_notifier.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:provider/provider.dart';
-//import 'chat_service.dart'; // Import your ChatService
+import 'package:http/http.dart' as http;
 
 class ConversationScreen extends StatefulWidget {
   final String userId;
@@ -18,12 +19,7 @@ class ConversationScreen extends StatefulWidget {
 }
 
 class _ConversationScreenState extends State<ConversationScreen> {
-  final List<Map<String, dynamic>> messages = [
-    {'text': 'Hello!', 'sender': 'me', 'time': '10:00 AM'},
-    {'text': 'Hi there!', 'sender': 'User 1', 'time': '10:01 AM'},
-    {'text': 'How are you?', 'sender': 'me', 'time': '10:02 AM'},
-  ];
-
+  final List<Map<String, dynamic>> messages = [];
   final TextEditingController _controller = TextEditingController();
   late ChatService _chatService;
 
@@ -32,36 +28,70 @@ class _ConversationScreenState extends State<ConversationScreen> {
     super.initState();
     _chatService = ChatService();
     _chatService.connectToServer();
+    _fetchMessages();
     _listenForMessages();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    _chatService.disconnect();
+  Future<void> _fetchMessages() async {
+    final token = Provider.of<TokenNotifier>(context, listen: false).token;
+    Map<String, dynamic> user = JwtDecoder.decode(token!);
+    final senderId = user["id"];
+
+    try {
+      final response = await http.get(
+        Uri.parse(
+          'https://anonymous-health.onrender.com/${widget.userId}/$senderId',
+        ),
+        headers: {'Authorization': 'Bearer $token'},
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> fetchedMessages = jsonDecode(response.body);
+        setState(() {
+          messages.addAll(fetchedMessages.map((message) {
+            return {
+              'text': message['content'],
+              'sender': message['sender'],
+              'time': message['timestamp'],
+            };
+          }).toList());
+        });
+      } else {
+        print('Failed to fetch messages: ${response.body}');
+      }
+    } catch (error) {
+      print('Error fetching messages: $error');
+    }
   }
 
   void _sendMessage() async {
     final token = Provider.of<TokenNotifier>(context, listen: false).token;
     Map<String, dynamic> user = JwtDecoder.decode(token!);
-    print(user);
+    final senderId = user["id"];
+
     if (_controller.text.isNotEmpty) {
       final content = _controller.text;
       try {
-        await _chatService.sendMessage(user["id"], widget.userId, content);
+        await _chatService.sendMessage(senderId, widget.userId, content);
         setState(() {
           messages.add({
             'text': content,
-            'sender': widget.userId,
+            'sender': senderId,
             'time': _getCurrentTime(),
           });
           _controller.clear();
         });
       } catch (e) {
-        // Handle error (e.g., show a snackbar)
         print('Error: $e');
       }
     }
+  }
+
+  @override
+  void dispose() {
+    _chatService.socket.off('private_message');
+    _chatService.disconnect();
+    super.dispose();
   }
 
   void _listenForMessages() {
@@ -106,7 +136,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
               itemCount: messages.length,
               itemBuilder: (context, index) {
                 final message = messages[index];
-                final isMe = message['sender'] == widget.userId;
+                final isMe = message['sender'] ==
+                    JwtDecoder.decode(
+                        Provider.of<TokenNotifier>(context, listen: false)
+                            .token!)['id'];
                 return Align(
                   alignment:
                       isMe ? Alignment.centerRight : Alignment.centerLeft,

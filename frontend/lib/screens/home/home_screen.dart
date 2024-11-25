@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Unread Messages',
                           Icons.message,
                           Colors.white,
-                          'You have 5 unread messages',
+                          'You have  unread messages',
                           Colors.lightBlueAccent,
                         ),
                         const SizedBox(height: 20),

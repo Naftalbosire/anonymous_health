@@ -18,5 +18,20 @@ router.get('/messages/:userId', async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch messages' });
   }
 });
+router.get('/messages/:userId/:currentUserId', async (req, res) => {
+    const { userId, currentUserId } = req.params;
+    try {
+      const messages = await Message.find({
+        $or: [
+          { sender: userId, recipient: currentUserId },
+          { sender: currentUserId, recipient: userId }
+        ]
+      }).sort({ timestamp: 1 });
+      res.json(messages);
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch messages' });
+    }
+  });
+  
 
 module.exports = router;
