@@ -15,6 +15,7 @@ exports.createGroup = async (req, res) => {
 
     res.status(201).json({ message: 'Group created successfully', data: group });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error creating group', error });
   }
 };
@@ -70,3 +71,14 @@ exports.getGroupMessages = async (req, res) => {
     res.status(500).json({ message: 'Error retrieving group messages', error });
   }
 };
+
+// Get all groups
+exports.getAllGroups = async (req, res) => {
+  try {
+    const groups = await Group.find().sort({ createdAt: -1 }); // Sort by creation date (latest first)
+    res.status(200).json({ message: 'Groups retrieved successfully', data: groups });
+  } catch (error) {
+    res.status(500).json({ message: 'Error retrieving groups', error });
+  }
+};
+
