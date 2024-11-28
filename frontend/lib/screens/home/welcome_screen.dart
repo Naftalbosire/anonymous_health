@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/screens/auth/login_screen.dart';
 import 'package:frontend/screens/auth/registration_screen.dart';
-// import 'package:health_app/screens/home_screen.dart';
-// import 'login_screen.dart'; // Import the LoginScreen
-// import 'registration_screen.dart'; // Import the RegistrationScreen
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
@@ -132,36 +129,6 @@ class WelcomeScreen extends StatelessWidget {
                     minWidth: MediaQuery.of(context).size.width,
                     child: const Text(
                       "Sign Up",
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                  child: MaterialButton(
-                    onPressed: () {
-                      // Navigate to RegistrationScreen
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => HomeScreen()),
-                      // );
-                    },
-                    color: const Color(0xffffffff),
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(22.0),
-                      side:
-                          const BorderSide(color: Color(0xff3a57e8), width: 1),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    textColor: const Color(0xff3a57e8),
-                    height: 45,
-                    minWidth: MediaQuery.of(context).size.width,
-                    child: const Text(
-                      "Home Screen",
                       style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
