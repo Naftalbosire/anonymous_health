@@ -1,3 +1,4 @@
+import 'package:frontend/widgets/constants.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class SocketService {
@@ -5,7 +6,7 @@ class SocketService {
 
   void connect() {
     socket = IO.io(
-        'http://localhost:5000',
+        ApiConstants.baseUrl,
         IO.OptionBuilder()
             .setTransports(['websocket']) // Use WebSocket only
             .disableAutoConnect() // Prevent auto connection
