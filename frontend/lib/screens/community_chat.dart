@@ -35,6 +35,7 @@ class _CommunityChatState extends State<CommunityChat> {
       appBar: AppBar(
         title: Text('${widget.communityName} Chat'),
         backgroundColor: Colors.lightBlueAccent,
+        actions: [Icon(Icons.group_add)],
       ),
       body: Column(
         children: [

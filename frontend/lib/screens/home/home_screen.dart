@@ -5,6 +5,7 @@ import 'dart:async';
 
 import 'package:frontend/widgets/theme_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -101,7 +102,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           'Unread Messages',
                           Icons.message,
                           Colors.white,
-                          'You have  unread messages',
+                          'You may have unread messages',
                           Colors.lightBlueAccent,
                         ),
                         const SizedBox(height: 20),
@@ -189,9 +190,23 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Build the explore button with gradient style
+
   Widget _buildExploreButton() {
     return ElevatedButton.icon(
-      onPressed: () {},
+      onPressed: () async {
+        const url =
+            'https://www.who.int/news-room/feature-stories/detail/knowledge-is-power--tackling-stigma-through-social-contact';
+        if (await canLaunchUrl(Uri.parse(url))) {
+          await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+        } else {
+          // Handle the error if the URL cannot be launched
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not open the link.'),
+            ),
+          );
+        }
+      },
       icon: const Icon(Icons.explore),
       label: const Text('Explore More'),
       style: ElevatedButton.styleFrom(
