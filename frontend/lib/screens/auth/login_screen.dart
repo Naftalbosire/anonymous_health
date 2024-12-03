@@ -3,7 +3,6 @@ import 'package:frontend/widgets/constants.dart';
 import 'package:frontend/widgets/theme_notifier.dart';
 import 'package:http/http.dart' as http; // Import http package
 import 'dart:convert';
-
 import 'package:provider/provider.dart'; // For jsonEncode
 
 class LoginScreen extends StatefulWidget {
@@ -26,7 +25,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-// Inside your _login method
+  // Inside your _login method
   Future<void> _login() async {
     String email = _emailController.text.trim();
     String password = _passwordController.text.trim();
@@ -121,19 +120,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     width: 100,
                     fit: BoxFit.cover,
                   ),
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                    child: Align(
-                      alignment: Alignment(-0.3, 0.0),
-                      child: Text(
-                        "Login",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 22,
-                          color: Color(0xff000000),
-                        ),
-                      ),
+                  const SizedBox(
+                      height: 16), // Add spacing between image and text
+                  const Text(
+                    "Login",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontWeight: FontWeight.w700,
+                      fontSize: 22,
+                      color: Color(0xff000000),
                     ),
                   ),
                   Padding(

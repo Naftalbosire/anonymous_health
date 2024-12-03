@@ -38,11 +38,11 @@ class _ConversationScreenState extends State<ConversationScreen> {
     Map<String, dynamic> user = JwtDecoder.decode(token!);
     final senderId = user["id"];
     final recieverId = widget.reciever['_id'];
-    print('${ApiConstants.baseUrl}/api/chat/messages/${recieverId}/$senderId');
+    print('${ApiConstants.baseUrl}/api/chat/messages/$recieverId/$senderId');
     try {
       final response = await http.get(
         Uri.parse(
-          '${ApiConstants.baseUrl}/api/chat/messages/${recieverId}/$senderId',
+          '${ApiConstants.baseUrl}/api/chat/messages/$recieverId/$senderId',
         ),
         headers: {'Authorization': 'Bearer $token'},
       );
