@@ -15,7 +15,8 @@ class CommunitiesScreen extends StatefulWidget {
 
 class _CommunitiesScreenState extends State<CommunitiesScreen> {
   int _selectedIndex = 2; // Set the selected index for Communities
-  List<String> communityNames = []; // List to hold community names
+  List<Map<String, dynamic>> communityNames =
+      []; // List to hold community names
 
   // Fetch groups from the backend
   Future<void> _fetchGroups() async {
@@ -33,8 +34,13 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
         // Parse the response
         final List<dynamic> data = json.decode(response.body)['data'];
         setState(() {
-          communityNames =
-              data.map((group) => group['name'] as String).toList();
+          communityNames = data
+              .map((group) => {
+                    "name": group['name'] as String,
+                    'id': group['_id'],
+                    'members': group['members'] ?? []
+                  })
+              .toList();
         });
       } else {
         throw Exception('Failed to load groups: ${response.body}');
@@ -157,7 +163,8 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
                       child: Icon(Icons.group, color: Colors.white),
                     ),
                     title: Text(
-                      communityNames[index], // Set community name dynamically
+                      communityNames[index]
+                          ['name'], // Set community name dynamically
                       style: const TextStyle(fontWeight: FontWeight.bold),
                     ),
                     // subtitle: const Text(
@@ -171,7 +178,9 @@ class _CommunitiesScreenState extends State<CommunitiesScreen> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => CommunityChat(
-                            communityName: communityNames[index],
+                            communityName: communityNames[index]['name'],
+                            groupId: communityNames[index]['id'],
+                            members: communityNames[index]['members'],
                           ),
                         ),
                       );
