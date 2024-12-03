@@ -64,13 +64,17 @@ exports.getGroupMessages = async (req, res) => {
   try {
     const { groupId } = req.params;
 
-    const messages = await GroupMessage.find({ group: groupId }).sort({ timestamp: 1 });
+    // Fetch messages and populate the sender field
+    const messages = await GroupMessage.find({ group: groupId })
+      .sort({ timestamp: 1 })
+      .populate('sender', 'email'); // Populate sender with name and email
 
     res.status(200).json({ message: 'Group messages retrieved successfully', data: messages });
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving group messages', error });
   }
 };
+
 
 // Get all groups
 exports.getAllGroups = async (req, res) => {
