@@ -1,6 +1,6 @@
 # frontend
 
-A new Flutter project.
+This is an android app that focuses on ensuring maximum privacy between a doctor and a patient in their online communication.
 
 ## Getting Started
 
